@@ -2,6 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.internal.hash.Hashing
 
 plugins {
+    id("org.jetbrains.kotlin.jvm") version "1.8.20" 
     `kotlin-dsl`
     id("com.github.johnrengelman.shadow") version "6.0.0" apply false
     `maven-publish`
