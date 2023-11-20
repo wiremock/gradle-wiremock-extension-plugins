@@ -28,10 +28,10 @@ class WireMockExtensionConventionTest {
         withSettings()
         withProperties(
             """
-            baseArtifact = "my-test-wiremock-extension"
-            version = "1.0.0-SNAPSHOT"
-            description = "My Test WireMock Extension"
-            githubRepo = "wiremock-my-test-extension"    
+            baseArtifact = my-test-wiremock-extension
+            version = 1.0.0-SNAPSHOT
+            description = My Test WireMock Extension
+            githubRepo = wiremock-my-test-extension 
             """.trimIndent()
         )
         withBuildScript(
@@ -52,7 +52,7 @@ class WireMockExtensionConventionTest {
         )
         withFile("src/main/java/Test.java",
             """
-            class Test
+            public class Test
             {
                 public static void main(String []args)
                 {

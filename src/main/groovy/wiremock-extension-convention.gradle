@@ -127,11 +127,12 @@ publishing {
                             }
                         }
 
+                        // TODO: Extract developers from implementation definition
                         developers {
                             developer {
-                                id = 'dirkbolte'
-                                name = 'Dirk Bolte'
-                                email = 'dirk.bolte@gmx.de'
+                                id = 'wiremock-build-bot'
+                                name = 'WireMock Build Bot'
+                                email = 'build-bot@wiremock.org'
                             }
                         }
                     }
@@ -164,11 +165,12 @@ publishing {
                             }
                         }
 
+                        // TODO: Extract developers from implementation definition
                         developers {
                             developer {
-                                id = 'dirkbolte'
-                                name = 'Dirk Bolte'
-                                email = 'dirk.bolte@gmx.de'
+                                id = 'wiremock-build-bot'
+                                name = 'WireMock Build Bot'
+                                email = 'build-bot@wiremock.org'
                             }
                         }
                     }
