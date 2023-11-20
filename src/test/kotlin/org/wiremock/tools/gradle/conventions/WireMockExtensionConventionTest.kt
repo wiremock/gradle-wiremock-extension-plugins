@@ -14,6 +14,7 @@ import java.io.File
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.Assert.assertThat
+import org.junit.Test
 
 class WireMockExtensionConventionTest {
     @Rule
@@ -28,7 +29,7 @@ class WireMockExtensionConventionTest {
     fun setup() {
         withSettings()
         withBuildScript(
-                """
+            """
             plugins {
                 kotlin("jvm") version "$embeddedKotlinVersion"
                 id("org.wiremock.tools.gradle.wiremock-extension-convention")
@@ -37,6 +38,16 @@ class WireMockExtensionConventionTest {
             """
         )
     }
+
+    @Test
+    fun smokeTest() {
+
+        assertThat(
+                build("build", "-s").output,
+                containsString("shadowJar")
+        )
+    }
+
 
     private
     fun build(vararg arguments: String) =
@@ -75,24 +86,6 @@ class WireMockExtensionConventionTest {
     private
     fun BuildResult.outcomeOf(taskPath: String): TaskOutcome? =
             task(taskPath)?.outcome
-
-    private
-    val ktlintReportFile: File by lazy { projectDir.resolve("build/reports/ktlint/ktlintMainSourceSetCheck/ktlintMainSourceSetCheck.txt") }
-
-    private
-    fun assertKtlintErrors(count: Int) =
-            assertThat(
-                    "ktlint error count in\n${ktlintReportFile.readText()}",
-                    ktlintReportFile.readLines().filter { it.contains("source.kt") }.count(),
-                    equalTo(count)
-            )
-
-    private
-    fun assertKtLintError(error: String, line: Int, column: Int) =
-            assertThat(
-                    ktlintReportFile.readText().withoutAnsiColorCodes(),
-                    containsString("source.kt:$line:$column: $error")
-            )
 
     private
     fun String.withoutAnsiColorCodes() =

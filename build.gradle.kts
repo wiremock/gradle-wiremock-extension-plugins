@@ -18,7 +18,7 @@ group = "org.wiremock.tools.gradle"
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
+        languageVersion.set(JavaLanguageVersion.of(11))
     }
 }
 
@@ -30,12 +30,13 @@ gradlePlugin {
     website = "https://github.com/wiremock/gradle-wiremock-extension-plugins"
     vcsUrl = "https://github.com/wiremock/gradle-wiremock-extension-plugins"
     plugins {
-/*        create("wiremock-extension-convention") {
+        register("wiremock-extension-convention") {
             id = "org.wiremock.tools.gradle.wiremock-extension-convention"
+            implementationClass = "org.wiremock.tools.gradle.conventions.WireMockExtensionConventionPlugin"
             displayName = "Gradle convention plugin that bundles common packaging and release logic for WireMock extensions"
             description = "Gradle convention plugin for WireMock Extensions"
             tags = listOf("wiremock")
-        }*/
+        }
     }
 }
 
