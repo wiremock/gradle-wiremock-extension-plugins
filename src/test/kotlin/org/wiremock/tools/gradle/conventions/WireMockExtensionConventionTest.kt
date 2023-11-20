@@ -32,8 +32,7 @@ class WireMockExtensionConventionTest {
             """
             plugins {
                 kotlin("jvm") version "$embeddedKotlinVersion"
-                id("org.wiremock.tools.gradle.wiremock-extension-convention")
-                id("wiremock-extension-convention2")
+                id("wiremock-extension-convention")
             }
 
             """

@@ -3,6 +3,7 @@ import org.gradle.internal.hash.Hashing
 
 plugins {
     `kotlin-dsl`
+    `groovy-gradle-plugin`
     id("org.jetbrains.kotlin.jvm") version "1.8.20"
     `idea`
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
@@ -12,7 +13,7 @@ plugins {
     id("com.gradle.plugin-publish") version "1.2.1"
     id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
     id("com.palantir.git-version") version "3.0.0"
-    id("wiremock-extension-convention2")
+ //   id("wiremock-extension-convention2")
 }
 
 group = "org.wiremock.tools.gradle"
@@ -31,13 +32,17 @@ gradlePlugin {
     website = "https://github.com/wiremock/gradle-wiremock-extension-plugins"
     vcsUrl = "https://github.com/wiremock/gradle-wiremock-extension-plugins"
     plugins {
-        register("wiremock-extension-convention") {
+        /*register("wiremock-extension-convention") {
             id = "org.wiremock.tools.gradle.wiremock-extension-convention"
             implementationClass = "org.wiremock.tools.gradle.conventions.WireMockExtensionConventionPlugin"
             displayName = "Gradle convention plugin that bundles common packaging and release logic for WireMock extensions"
             description = "Gradle convention plugin for WireMock Extensions"
             tags = listOf("wiremock")
         }
+        register("wiremock-extension-convention") {
+            id = "org.wiremock.tools.gradle.wiremock-extension-convention"
+            implementationClass = "WiremockExtensionConventionPlugin"
+        }*/
     }
 }
 
@@ -80,6 +85,15 @@ processResources {
 }
 
 publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "org.gradle.sample"
+            artifactId = "library"
+            version = "1.1"
+
+            from(components["java"])
+        }
+    }
     repositories {
         maven {
             name = "localPluginRepository"
