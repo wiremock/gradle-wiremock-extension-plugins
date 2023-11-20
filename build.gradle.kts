@@ -2,11 +2,16 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.internal.hash.Hashing
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.8.20" 
     `kotlin-dsl`
-    id("com.github.johnrengelman.shadow") version "6.0.0" apply false
+    id("org.jetbrains.kotlin.jvm") version "1.8.20"
+    `idea`
+    id("com.github.johnrengelman.shadow") version "8.1.1" apply false
+    `signing`
+    `java-library`
     `maven-publish`
     id("com.gradle.plugin-publish") version "1.2.1"
+    id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
+    id("com.palantir.git-version") version "3.0.0"
 }
 
 group = "org.wiremock.tools.gradle"
@@ -25,13 +30,12 @@ gradlePlugin {
     website = "https://github.com/wiremock/gradle-wiremock-extension-plugins"
     vcsUrl = "https://github.com/wiremock/gradle-wiremock-extension-plugins"
     plugins {
-        create("wiremock-extension-convention") {
+/*        create("wiremock-extension-convention") {
             id = "org.wiremock.tools.gradle.wiremock-extension-convention"
-            implementationClass = "org.wiremock.tools.gradle.conventions.WireMockExtensionConventionPlugin"
             displayName = "Gradle convention plugin that bundles common packaging and release logic for WireMock extensions"
             description = "Gradle convention plugin for WireMock Extensions"
             tags = listOf("wiremock")
-        }
+        }*/
     }
 }
 
@@ -71,4 +75,13 @@ val writeDefaultVersionsProperties by tasks.registering(WriteProperties::class) 
 }
 processResources {
     dependsOn(writeDefaultVersionsProperties)
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "localPluginRepository"
+            url = uri("../local-plugin-repository")
+        }
+    }
 }
