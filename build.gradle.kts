@@ -50,9 +50,9 @@ gradlePlugin {
 dependencies {
 
     implementation(kotlin("stdlib-jdk8"))
-    implementation("com.palantir.git-version:3.0.0")
-    implementation("com.github.johnrengelman.shadow:8.1.1")
-    implementation("io.github.gradle-nexus.publish-plugin:1.3.0")
+    implementation("com.palantir.gradle.gitversion:gradle-git-version:3.0.0")
+    implementation("com.github.johnrengelman:shadow:8.1.1")
+    implementation("io.github.gradle-nexus:publish-plugin:1.3.0")
 
     runtimeOnly(kotlin("gradle-plugin"))
 

@@ -26,6 +26,14 @@ class WireMockExtensionConventionTest {
     @Before
     fun setup() {
         withSettings()
+        withProperties(
+            """
+            baseArtifact = "my-test-wiremock-extension"
+            version = "1.0.0-SNAPSHOT"
+            description = "My Test WireMock Extension"
+            githubRepo = "wiremock-my-test-extension"    
+            """.trimIndent()
+        )
         withBuildScript(
             """
             buildscript {
@@ -34,14 +42,24 @@ class WireMockExtensionConventionTest {
                     mavenLocal()
                 }
             }
-            
+                  
             plugins {
                 kotlin("jvm") version "$embeddedKotlinVersion"
                 id("wiremock-extension-convention")
             }
-
+            
             """
         )
+        withFile("src/main/java/Test.java",
+            """
+            class Test
+            {
+                public static void main(String []args)
+                {
+                    System.out.println("My First Java Program.");
+                }
+            };    
+            """.trimIndent())
     }
 
     @Test
@@ -76,6 +94,10 @@ class WireMockExtensionConventionTest {
     private
     fun withSettings(text: String = "") =
             withFile("settings.gradle.kts", text)
+
+    private
+    fun withProperties(text: String = "") =
+            withFile("gradle.properties", text)
 
     private
     fun withSource(text: String) =
