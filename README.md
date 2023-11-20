@@ -25,7 +25,10 @@ Set the following `gradle.properties`:
 baseArtifact = my-test-wiremock-extension
 version = 1.0.0-SNAPSHOT
 description = My Test WireMock Extension
-githubRepo = wiremock-my-test-extension 
+githubRepo = wiremock-my-test-extension
+developer.id=todo
+developer.name=TODO WireMock Developer
+developer.email=noreply@wiremock.org
 ```
 
 Use the plugin in your `build.gradle.kts` file:

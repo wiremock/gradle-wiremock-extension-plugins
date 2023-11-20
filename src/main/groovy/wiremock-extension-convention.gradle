@@ -122,12 +122,11 @@ publishing {
                             }
                         }
 
-                        // TODO: Extract developers from implementation definition
                         developers {
                             developer {
-                                id = 'wiremock-build-bot'
-                                name = 'WireMock Build Bot'
-                                email = 'build-bot@wiremock.org'
+                                id = project.findProperty("developer.id") ?: "wiremock-build-bot"
+                                name = project.findProperty("developer.name") ?: "WireMock Build Bot"
+                                email = project.findProperty("developer.email") ?: "build-bot@wiremock.org"
                             }
                         }
                     }
@@ -160,12 +159,11 @@ publishing {
                             }
                         }
 
-                        // TODO: Extract developers from implementation definition
                         developers {
                             developer {
-                                id = 'wiremock-build-bot'
-                                name = 'WireMock Build Bot'
-                                email = 'build-bot@wiremock.org'
+                                id = project.findProperty("developer.id") ?: "wiremock-build-bot"
+                                name = project.findProperty("developer.name") ?: "WireMock Build Bot"
+                                email = project.findProperty("developer.email") ?: "build-bot@wiremock.org"
                             }
                         }
                     }
