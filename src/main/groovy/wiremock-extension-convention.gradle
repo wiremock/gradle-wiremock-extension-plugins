@@ -4,13 +4,11 @@ plugins {
     id 'idea'
     id 'signing'
     id 'maven-publish'
-    id 'com.palantir.git-version'
     id 'com.github.johnrengelman.shadow'
     id 'io.github.gradle-nexus.publish-plugin'
 }
 
 group 'org.wiremock.extensions'
-version gitVersion()
 
 wrapper {
     gradleVersion = '8.2.1'

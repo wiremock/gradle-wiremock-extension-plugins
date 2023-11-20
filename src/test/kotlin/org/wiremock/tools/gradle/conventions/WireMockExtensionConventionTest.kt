@@ -5,14 +5,12 @@ import org.gradle.kotlin.dsl.embeddedKotlinVersion
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import java.io.File
 
 import org.hamcrest.CoreMatchers.containsString
-import org.hamcrest.CoreMatchers.equalTo
 import org.junit.Assert.assertThat
 import org.junit.Test
 
@@ -30,6 +28,13 @@ class WireMockExtensionConventionTest {
         withSettings()
         withBuildScript(
             """
+            buildscript {
+                repositories {
+                    mavenCentral()
+                    mavenLocal()
+                }
+            }
+            
             plugins {
                 kotlin("jvm") version "$embeddedKotlinVersion"
                 id("wiremock-extension-convention")

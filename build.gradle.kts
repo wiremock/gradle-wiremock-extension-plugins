@@ -6,14 +6,14 @@ plugins {
     `groovy-gradle-plugin`
     id("org.jetbrains.kotlin.jvm") version "1.8.20"
     `idea`
-    id("com.github.johnrengelman.shadow") version "8.1.1" apply false
+
     `signing`
     `java-library`
     `maven-publish`
     id("com.gradle.plugin-publish") version "1.2.1"
-    id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
-    id("com.palantir.git-version") version "3.0.0"
- //   id("wiremock-extension-convention2")
+    id("com.palantir.git-version") version "3.0.0" apply false
+    id("com.github.johnrengelman.shadow") version "8.1.1" apply false
+    id("io.github.gradle-nexus.publish-plugin") version "1.3.0" apply false
 }
 
 group = "org.wiremock.tools.gradle"
@@ -26,6 +26,7 @@ java {
 
 repositories {
     gradlePluginPortal()
+    mavenCentral()
 }
 
 gradlePlugin {
@@ -49,6 +50,9 @@ gradlePlugin {
 dependencies {
 
     implementation(kotlin("stdlib-jdk8"))
+    implementation("com.palantir.git-version:3.0.0")
+    implementation("com.github.johnrengelman.shadow:8.1.1")
+    implementation("io.github.gradle-nexus.publish-plugin:1.3.0")
 
     runtimeOnly(kotlin("gradle-plugin"))
 
