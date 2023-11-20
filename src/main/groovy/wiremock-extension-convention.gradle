@@ -19,7 +19,6 @@ wrapper {
 project.ext {
     versions = [
         wiremock  : '3.3.1',
-        caffeine  : '3.1.8',
         handlebars: '4.3.1',
         junit     : '5.10.1',
         assertj   : '3.24.2',
@@ -55,10 +54,6 @@ shadowJar {
         from("shadowjar/resources") {}
     }
 
-    relocate "com.github.ben-manes.caffeine", 'wiremock.com.github.ben-manes.caffeine'
-    relocate "com.github.jknack", 'wiremock.com.github.jknack'
-
-
     dependencies {
         exclude(dependency('junit:junit'))
     }
@@ -67,7 +62,7 @@ shadowJar {
 
     exclude 'META-INF/maven/**'
     exclude 'module-info.class'
-    exclude 'handlebars-*.js'
+    exclude 'handlebars-*.js' // Comes from WirerMock
 }
 
 signing {
@@ -202,7 +197,6 @@ repositories {
 
 dependencies {
     implementation("org.wiremock:wiremock:${versions.wiremock}")
-    implementation("com.github.ben-manes.caffeine:caffeine:${versions.caffeine}")
     implementation("com.github.jknack:handlebars-helpers:${versions.handlebars}") {
         exclude group: 'org.mozilla', module: 'rhino'
     }

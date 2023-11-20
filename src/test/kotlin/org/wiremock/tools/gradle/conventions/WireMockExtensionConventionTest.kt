@@ -19,22 +19,11 @@ class WireMockExtensionConventionTest {
     @JvmField
     val tmpDir = TemporaryFolder()
 
-    private
-    val projectDir: File
+    private val projectDir: File
         get() = tmpDir.root
 
-    @Before
-    fun setup() {
-        withSettings()
-        withProperties(
-            """
-            baseArtifact = my-test-wiremock-extension
-            version = 1.0.0-SNAPSHOT
-            description = My Test WireMock Extension
-            githubRepo = wiremock-my-test-extension 
-            """.trimIndent()
-        )
-        withBuildScript(
+    private val BASE_SCRIPT : String
+        get() =
             """
             buildscript {
                 repositories {
@@ -48,8 +37,20 @@ class WireMockExtensionConventionTest {
                 id("wiremock-extension-convention")
             }
             
+            """.trimIndent()
+
+    @Before
+    fun setup() {
+        withSettings()
+        withProperties(
             """
+            baseArtifact = my-test-wiremock-extension
+            version = 1.0.0-SNAPSHOT
+            description = My Test WireMock Extension
+            githubRepo = wiremock-my-test-extension 
+            """.trimIndent()
         )
+        withBuildScript(BASE_SCRIPT)
         withFile("src/main/java/Test.java",
             """
             public class Test
@@ -64,10 +65,33 @@ class WireMockExtensionConventionTest {
 
     @Test
     fun smokeTest() {
-
         assertThat(
                 build("build", "-s").output,
                 containsString("shadowJar")
+        )
+    }
+
+    @Test
+    fun shading() {
+        withBuildScript(BASE_SCRIPT +
+                """
+                import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+                
+                dependencies {
+                    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
+                }
+                
+                tasks {
+                    named<ShadowJar>("shadowJar") {
+                        relocate("com.github.ben-manes.caffeine", "wiremock.com.github.ben-manes.caffeine")
+                        relocate("com.github.jknack", "wiremock.com.github.jknack")
+                    }
+                }
+                """.trimIndent()
+        )
+        assertThat(
+                build("build", "-s").output,
+                containsString("shadowJar").also { containsString("wiremock.com.github.jknack") }
         )
     }
 

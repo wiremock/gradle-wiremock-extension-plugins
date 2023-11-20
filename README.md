@@ -17,6 +17,8 @@ Features:
 
 ## Usage
 
+### Basic use
+
 Set the following `gradle.properties`:
 
 ```properties
@@ -38,5 +40,25 @@ buildscript {
 plugins {
     kotlin("jvm") version "$embeddedKotlinVersion"
     id("wiremock-extension-convention")
+}
+```
+
+### Shading
+
+When you need to include additional dependencies,
+they should be shaded in the `shadedJar` task:
+
+```kotlin
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+                
+dependencies {
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
+}
+
+tasks {
+    named<ShadowJar>("shadowJar") {
+        relocate("com.github.ben-manes.caffeine", "wiremock.com.github.ben-manes.caffeine")
+        relocate("com.github.jknack", "wiremock.com.github.jknack")
+    }
 }
 ```
