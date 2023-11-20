@@ -12,6 +12,7 @@ plugins {
     id("com.gradle.plugin-publish") version "1.2.1"
     id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
     id("com.palantir.git-version") version "3.0.0"
+    id("wiremock-extension-convention2")
 }
 
 group = "org.wiremock.tools.gradle"

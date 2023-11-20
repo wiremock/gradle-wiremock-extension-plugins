@@ -1,12 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-}
-
-group 'org.wiremock.extensions'
-version gitVersion()
-
 plugins {
     id 'java'
     id 'java-library'
@@ -18,6 +9,9 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'io.github.gradle-nexus.publish-plugin' version "1.3.0"
 }
+
+group 'org.wiremock.extensions'
+version gitVersion()
 
 wrapper {
     gradleVersion = '8.2.1'
