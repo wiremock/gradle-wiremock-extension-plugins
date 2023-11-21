@@ -30,10 +30,9 @@ gradlePlugin {
     vcsUrl = "https://github.com/wiremock/gradle-wiremock-extension-plugins"
     plugins {
         afterEvaluate {
-            removeIf { it.id.equals("wiremock-extension-convention") }
             register("wiremock-extension-convention") {
                 id = "org.wiremock.tools.gradle.wiremock-extension-convention"
-                implementationClass = "WiremockExtensionConventionPlugin"
+                implementationClass = "OrgWiremockToolsGradleWiremockExtensionConventionPlugin"
                 displayName = "Gradle convention plugin that bundles common packaging and release logic for WireMock extensions"
                 description = "Gradle convention plugin for WireMock Extensions"
                 tags = listOf("wiremock")
