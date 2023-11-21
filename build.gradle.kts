@@ -1,13 +1,9 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.gradle.internal.hash.Hashing
-
 plugins {
     `kotlin-dsl`
     `groovy-gradle-plugin`
     id("org.jetbrains.kotlin.jvm") version "1.8.20"
     `idea`
 
-    `signing`
     `java-library`
     `maven-publish`
     id("com.gradle.plugin-publish") version "1.2.1"
@@ -91,9 +87,9 @@ processResources {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            groupId = "org.gradle.sample"
-            artifactId = "library"
-            version = "1.1"
+            groupId = "${project.group}"
+            artifactId = "wiremock-extension-convention"
+            version = "${project.version}"
 
             from(components["java"])
         }
