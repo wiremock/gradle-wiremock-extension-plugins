@@ -1,0 +1,6 @@
+.gradle
+/build/
+/buildSrc/build/
+
+.idea
+.vscode
