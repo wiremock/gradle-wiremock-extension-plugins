@@ -1,6 +1,7 @@
 .gradle
 /build/
 /buildSrc/build/
+/bin/
 
 .idea
 .vscode
