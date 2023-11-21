@@ -29,17 +29,16 @@ gradlePlugin {
     website = "https://github.com/wiremock/gradle-wiremock-extension-plugins"
     vcsUrl = "https://github.com/wiremock/gradle-wiremock-extension-plugins"
     plugins {
-        /*register("wiremock-extension-convention") {
-            id = "org.wiremock.tools.gradle.wiremock-extension-convention"
-            implementationClass = "org.wiremock.tools.gradle.conventions.WireMockExtensionConventionPlugin"
-            displayName = "Gradle convention plugin that bundles common packaging and release logic for WireMock extensions"
-            description = "Gradle convention plugin for WireMock Extensions"
-            tags = listOf("wiremock")
+        afterEvaluate {
+            removeIf { it.id.equals("wiremock-extension-convention") }
+            register("wiremock-extension-convention") {
+                id = "org.wiremock.tools.gradle.wiremock-extension-convention"
+                implementationClass = "WiremockExtensionConventionPlugin"
+                displayName = "Gradle convention plugin that bundles common packaging and release logic for WireMock extensions"
+                description = "Gradle convention plugin for WireMock Extensions"
+                tags = listOf("wiremock")
+            }
         }
-        register("wiremock-extension-convention") {
-            id = "org.wiremock.tools.gradle.wiremock-extension-convention"
-            implementationClass = "WiremockExtensionConventionPlugin"
-        }*/
     }
 }
 
