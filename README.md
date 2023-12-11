@@ -65,3 +65,8 @@ tasks {
     }
 }
 ```
+
+## Usage Examples
+
+- [WireMock Faker Extension](https://github.com/wiremock/wiremock-faker-extension)
+- [WireMock State Extension](https://github.com/wiremock/wiremock-state-extension)
