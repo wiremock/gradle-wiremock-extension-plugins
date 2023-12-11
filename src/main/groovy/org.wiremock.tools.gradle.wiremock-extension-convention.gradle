@@ -67,14 +67,24 @@ shadowJar {
 
 signing {
     // Docs: https://github.com/wiremock/community/blob/main/infra/maven-central.md
+    def isPublishTask = gradle.taskGraph.hasTask("uploadArchives") || gradle.taskGraph.hasTask("publish")
+    logger.info("Checking signing requirements: Version: " + version.toString() + ", Publish: " + isPublishTask)
+        
     required {
-        !version.toString().contains("SNAPSHOT") && (gradle.taskGraph.hasTask("uploadArchives") || gradle.taskGraph.hasTask("publish"))
+        !version.toString().contains("SNAPSHOT") && isPublishTask
     }
     def signingKey = providers.environmentVariable("OSSRH_GPG_SECRET_KEY").orElse("").get()
     def signingPassphrase = providers.environmentVariable("OSSRH_GPG_SECRET_KEY_PASSWORD").orElse("").get()
     if (!signingKey.isEmpty() && !signingPassphrase.isEmpty()) {
         useInMemoryPgpKeys(signingKey, signingPassphrase)
         sign(publishing.publications)
+    } else {
+        if (required) {
+            logger.error("Will not be signing the artifacts, no signing key or password specified via environment variables")
+            throw new GradleException("Cannot sign artifacts")
+        } else {
+            logger.info("Skipping signing of the artifacts, not required")
+        }
     }
 }
 
@@ -179,7 +189,7 @@ task checkReleasePreconditions {
     }
 }
 publish.dependsOn checkReleasePreconditions
-        publish.dependsOn 'signStandaloneJarPublication'
+publish.dependsOn 'signStandaloneJarPublication'
 publish.dependsOn 'signMavenJavaPublication'
 
 // FIXME: remove after https://github.com/gradle/gradle/issues/26091
