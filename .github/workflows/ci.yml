@@ -2,9 +2,10 @@ name: Build and test
 
 on:
   push:
-    branches: ["main", "impl"]
-    pull_request: ["main", "impl"]
-    workflow_dispatch:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   validate:
