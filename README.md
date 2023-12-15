@@ -46,7 +46,21 @@ plugins {
 }
 ```
 
-### Shading
+Or in Gradle:
+
+```groovy
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'org.wiremock.tools.gradle.wiremock-extension-convention' version '0.1.2'
+}
+```
+
+### Shading of dependencies
 
 When you need to include additional dependencies,
 they should be shaded in the `shadedJar` task:
@@ -65,6 +79,55 @@ tasks {
     }
 }
 ```
+
+### Release Automation
+
+To automate releases with this extension, add the following GitHub action in `.github/workflows/`:
+
+```yaml
+name: Release
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Determine new version
+        id: new_version
+        run: |
+          NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
+          echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Publish package
+        id: publish_package
+        uses: gradle/gradle-build-action@v2.9.0
+        with:
+          arguments: -Pversion=${{ steps.new_version.outputs.new_version }} publish closeAndReleaseStagingRepository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+          OSSRH_GPG_SECRET_KEY_PASSWORD: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+```
+
+Once the request for [Maven Central Publishing authorization](https://github.com/wiremock/community/blob/main/infra/maven-central.md) is completed,
+you can trigger the release Pipeline by just publishing a GitHub Release.
+Consider also configuring Release Drafter to automate chaangelogs.
 
 ## Usage Examples
 
