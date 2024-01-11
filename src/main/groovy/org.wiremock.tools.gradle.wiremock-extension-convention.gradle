@@ -19,7 +19,6 @@ wrapper {
 project.ext {
     versions = [
         wiremock  : '3.3.1',
-        handlebars: '4.3.1',
         junit     : '5.10.1',
         assertj   : '3.24.2',
         restAssured: '5.3.2',
@@ -204,11 +203,9 @@ repositories {
 }
 
 dependencies {
-    implementation("org.wiremock:wiremock:${versions.wiremock}")
-    implementation("com.github.jknack:handlebars-helpers:${versions.handlebars}") {
-        exclude group: 'org.mozilla', module: 'rhino'
-    }
+    shadow("org.wiremock:wiremock:${versions.wiremock}")
 
+    testImplementation("org.wiremock:wiremock:${versions.wiremock}")
     testImplementation(platform("org.junit:junit-bom:${versions.junit}"))
     testImplementation('org.junit.jupiter:junit-jupiter')
     testImplementation("org.assertj:assertj-core:${versions.assertj}")
