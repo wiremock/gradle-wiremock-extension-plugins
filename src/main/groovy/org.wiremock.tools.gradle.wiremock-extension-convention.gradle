@@ -22,7 +22,9 @@ project.ext {
         junit     : '5.10.1',
         assertj   : '3.24.2',
         restAssured: '5.3.2',
-        awaitility: '4.2.0'
+        awaitility: '4.2.0',
+        testcontainers: '1.19.3',
+        wiremockTestcontainers: '1.0-alpha-13'
     ]
 }
 
@@ -225,8 +227,10 @@ dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter')
     testImplementation("org.assertj:assertj-core:${versions.assertj}")
     testImplementation(platform("io.rest-assured:rest-assured-bom:${versions.restAssured}"))
-    testImplementation("io.rest-assured:rest-assured")
+    testImplementation('io.rest-assured:rest-assured')
     testImplementation("org.awaitility:awaitility:${versions.awaitility}")
+    testImplementation("org.testcontainers:junit-jupiter:${versions.testcontainers}")
+    testImplementation("org.wiremock.integrations.testcontainers:wiremock-testcontainers-module:${versions.wiremockTestcontainers}")
 }
 
 
@@ -241,6 +245,7 @@ compileTestJava {
     options.encoding = 'UTF-8'
 }
 assemble.dependsOn jar, shadowJar
+test.dependsOn shadowJar
 
 test {
     useJUnitPlatform()
