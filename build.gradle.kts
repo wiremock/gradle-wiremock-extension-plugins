@@ -76,7 +76,7 @@ val wiremockVersion = "3.3.1"
 val basePackagePath = "org/wiremock/tools/gradle/plugins"
 val processResources by tasks.existing(ProcessResources::class)
 val writeDefaultVersionsProperties by tasks.registering(WriteProperties::class) {
-    outputFile = processResources.get().destinationDir.resolve("$basePackagePath/default-versions.properties")
+    destinationFile.set(processResources.get().destinationDir.resolve("$basePackagePath/default-versions.properties"))
     property("wiremock_version", wiremockVersion)
 }
 processResources {
