@@ -1,18 +1,18 @@
 plugins {
     `kotlin-dsl`
     `groovy-gradle-plugin`
-    id("org.jetbrains.kotlin.jvm") version "1.8.20"
+    id("org.jetbrains.kotlin.jvm").version("1.8.20")
     `idea`
 
     `java-library`
     `maven-publish`
-    id("com.gradle.plugin-publish") version "1.2.1"
-    id("com.palantir.git-version") version "3.0.0" apply false
-    id("com.github.johnrengelman.shadow") version "8.1.1" apply false
-    id("io.github.gradle-nexus.publish-plugin") version "1.3.0" apply false
+    id("com.gradle.plugin-publish").version("1.2.1")
+    id("com.palantir.git-version").version("3.0.0").apply(false)
+    id("com.github.johnrengelman.shadow").version("8.1.1").apply(false)
+    id("io.github.gradle-nexus.publish-plugin").version("1.3.0").apply(false)
 }
 
-group = "org.wiremock.tools.gradle"
+rootProject.group ="org.wiremock.tools.gradle"
 
 java {
     toolchain {
@@ -63,7 +63,7 @@ tasks {
     jar {
         from(sourceSets.main.map { it.allSource })
         manifest.attributes.apply {
-            put("Implementation-Title", "WireMock Convention Plugin (${project.name})")
+            put("Implementation-Title", "WireMock Convention Plugin " + project.name)
             put("Implementation-Version", archiveVersion.get())
         }
     }
@@ -86,9 +86,9 @@ processResources {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            groupId = "${project.group}"
+            groupId = project.group.toString()
             artifactId = "wiremock-extension-convention"
-            version = "${project.version}"
+            version = project.version.toString()
 
             from(components["java"])
         }
