@@ -71,7 +71,7 @@ tasks {
 
 // default versions ---------------------------------------------------
 
-val wiremockVersion = "3.3.1"
+val wiremockVersion = "3.6.0"
 
 val basePackagePath = "org/wiremock/tools/gradle/plugins"
 val processResources by tasks.existing(ProcessResources::class)

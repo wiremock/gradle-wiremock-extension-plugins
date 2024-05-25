@@ -18,7 +18,7 @@ wrapper {
 
 project.ext {
     versions = [
-        wiremock  : '3.3.1',
+        wiremock  : '3.6.0',
         junit     : '5.10.1',
         assertj   : '3.24.2',
         restAssured: '5.3.2',
@@ -85,7 +85,7 @@ signing {
     // Docs: https://github.com/wiremock/community/blob/main/infra/maven-central.md
     def isPublishTask = gradle.taskGraph.hasTask("uploadArchives") || gradle.taskGraph.hasTask("publish")
     logger.info("Checking signing requirements: Version: " + version.toString() + ", Publish: " + isPublishTask)
-        
+
     required {
         !version.toString().contains("SNAPSHOT") && isPublishTask
     }
