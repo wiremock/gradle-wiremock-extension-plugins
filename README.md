@@ -15,6 +15,17 @@ Features:
 - Gradle 8.x
 - Java 11 or 17
 
+## Wiremock dependency
+
+This extension has a bundled wiremock dependency. Depending on the wiremock features you're using
+in your plugin, this plugin needs to be updated accordingly:
+
+| Gradle Convention plugin version | Wiremock version |
+|----------------------------------|------------------|
+| 0.3.0+                           | 3.6.0            |
+| 0.1.0+                           | 3.3.1            |
+
+
 ## Usage
 
 ### Basic use
