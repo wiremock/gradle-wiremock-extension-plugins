@@ -144,3 +144,9 @@ Consider also configuring Release Drafter to automate chaangelogs.
 
 - [WireMock Faker Extension](https://github.com/wiremock/wiremock-faker-extension)
 - [WireMock State Extension](https://github.com/wiremock/wiremock-state-extension)
+
+## Learn More
+
+- "Comment nous utilisons Kotlin et Gradle pour faire évoluer la communauté WireMock" by Oleg Nenashev at Devoxx Fance 2024
+  ([slides](https://speakerdeck.com/onenashev/devoxxfr-comment-nous-utilisons-kotlin-et-gradle-pour-faire-evoluer-la-communaute-wiremock),
+   [video](https://www.youtube.com/watch?v=pToRVRTI-Zs))
