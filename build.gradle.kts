@@ -9,7 +9,7 @@ plugins {
     `java-library`
     `maven-publish`
     id("com.gradle.plugin-publish") version "1.3.0"
-    id("com.palantir.git-version") version "3.0.0" apply false
+    id("com.palantir.git-version") version "3.1.0" apply false
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
     id("io.github.gradle-nexus.publish-plugin") version "1.3.0" apply false
     id("com.github.ben-manes.versions") version "0.51.0"
