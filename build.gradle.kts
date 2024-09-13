@@ -55,7 +55,7 @@ dependencies {
     runtimeOnly(kotlin("gradle-plugin"))
 
     testImplementation(gradleTestKit())
-    testImplementation("junit:junit:4.12")
+    testImplementation("junit:junit:4.13.2")
 }
 
 tasks {
