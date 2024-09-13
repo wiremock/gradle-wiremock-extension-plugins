@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     `kotlin-dsl`
     `groovy-gradle-plugin`
