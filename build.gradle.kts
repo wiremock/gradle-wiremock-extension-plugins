@@ -4,7 +4,7 @@ plugins {
     `kotlin-dsl`
     `groovy-gradle-plugin`
     id("org.jetbrains.kotlin.jvm") version "1.8.20"
-    `idea`
+    idea
 
     `java-library`
     `maven-publish`
