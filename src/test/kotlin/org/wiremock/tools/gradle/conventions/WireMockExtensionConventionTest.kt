@@ -11,9 +11,10 @@ import org.junit.rules.TemporaryFolder
 import java.io.File
 
 import org.hamcrest.CoreMatchers.containsString
-import org.junit.Assert.assertThat
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
+@Suppress("unused")
 class WireMockExtensionConventionTest {
     @Rule
     @JvmField
@@ -22,7 +23,7 @@ class WireMockExtensionConventionTest {
     private val projectDir: File
         get() = tmpDir.root
 
-    private val BASE_SCRIPT : String
+    private val baseScript : String
         get() =
             """
             buildscript {
@@ -50,7 +51,7 @@ class WireMockExtensionConventionTest {
             githubRepo = wiremock-my-test-extension 
             """.trimIndent()
         )
-        withBuildScript(BASE_SCRIPT)
+        withBuildScript(baseScript)
         withFile("src/main/java/Test.java",
             """
             public class Test
@@ -73,7 +74,7 @@ class WireMockExtensionConventionTest {
 
     @Test
     fun shading() {
-        withBuildScript(BASE_SCRIPT +
+        withBuildScript(baseScript +
                 """
                 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
                 
@@ -96,6 +97,7 @@ class WireMockExtensionConventionTest {
     }
 
 
+    @Suppress("SameParameterValue")
     private
     fun build(vararg arguments: String) =
             gradleRunnerFor(*arguments).build()
