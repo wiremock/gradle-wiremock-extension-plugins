@@ -42,6 +42,12 @@ developer.name=TODO WireMock Developer
 developer.email=noreply@wiremock.org
 ```
 
+It can be tweaked a bit more, with some optional properties:
+
+```properties
+useShadowJar = false # true by default, false will avoid creating the standalone JAR
+```
+
 Use the plugin in your `build.gradle.kts` file:
 
 ```kotlin

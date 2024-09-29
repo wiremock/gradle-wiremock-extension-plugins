@@ -1,15 +1,25 @@
-plugins {
-    id 'java'
-    id 'java-library'
-    id 'idea'
-    id 'signing'
-    id 'maven-publish'
-    id 'com.github.johnrengelman.shadow'
-    id 'io.github.gradle-nexus.publish-plugin'
+def getGivenConfigConventional() {
+	def givenConfig = [
+		useShadowJar: project.getProperties().getOrDefault("useShadowJar", "true") == "true"
+	]
+	return givenConfig
 }
 
+logger.info("WireMock conventions given config: ${getGivenConfigConventional()}")
+
+
+project.plugins.apply 'java'
+project.plugins.apply 'java-library'
+project.plugins.apply 'idea'
+project.plugins.apply 'signing'
+project.plugins.apply 'maven-publish'
+if (getGivenConfigConventional().useShadowJar) {
+    project.plugins.apply "com.github.johnrengelman.shadow"
+}
+project.plugins.apply 'io.github.gradle-nexus.publish-plugin'
+
+
 group 'org.wiremock.extensions'
-//version gitVersion()
 
 wrapper {
     gradleVersion = '8.2.1'
@@ -42,43 +52,45 @@ jar {
     archiveBaseName.set("${baseArtifact}")
 }
 
-shadowJar {
-    archiveBaseName.set("${baseArtifact}-standalone")
-    archiveClassifier.set('')
-    configurations = [
-        project.configurations.runtimeClasspath,
-        project.configurations.standaloneOnly
-    ]
+if (getGivenConfigConventional().useShadowJar) {
+    shadowJar {
+        archiveBaseName.set("${baseArtifact}-standalone")
+        archiveClassifier.set('')
+        configurations = [
+            project.configurations.runtimeClasspath,
+            project.configurations.standaloneOnly
+        ]
 
-    relocate 'org.mortbay', 'wiremock.org.mortbay'
-    relocate 'org.eclipse', 'wiremock.org.eclipse'
-    relocate 'org.codehaus', 'wiremock.org.codehaus'
-    relocate 'com.google', 'wiremock.com.google'
-    relocate 'com.google.thirdparty', 'wiremock.com.google.thirdparty'
-    relocate 'com.fasterxml.jackson', 'wiremock.com.fasterxml.jackson'
-    relocate 'org.apache', 'wiremock.org.apache'
-    relocate 'org.xmlunit', 'wiremock.org.xmlunit'
-    relocate 'org.hamcrest', 'wiremock.org.hamcrest'
-    relocate 'org.skyscreamer', 'wiremock.org.skyscreamer'
-    relocate 'org.json', 'wiremock.org.json'
-    relocate 'net.minidev', 'wiremock.net.minidev'
-    relocate 'com.jayway', 'wiremock.com.jayway'
-    relocate 'org.objectweb', 'wiremock.org.objectweb'
-    relocate 'org.custommonkey', 'wiremock.org.custommonkey'
-    relocate 'net.javacrumbs', 'wiremock.net.javacrumbs'
-    relocate 'net.sf', 'wiremock.net.sf'
-    relocate 'com.github.jknack', 'wiremock.com.github.jknack'
-    relocate 'org.antlr', 'wiremock.org.antlr'
-    relocate 'jakarta.servlet', 'wiremock.jakarta.servlet'
-    relocate 'org.checkerframework', 'wiremock.org.checkerframework'
-    relocate 'org.hamcrest', 'wiremock.org.hamcrest'
-    relocate 'org.slf4j', 'wiremock.org.slf4j'
-    relocate 'joptsimple', 'wiremock.joptsimple'
-    relocate 'org.yaml', 'wiremock.org.yaml'
-    relocate 'com.ethlo', 'wiremock.com.ethlo'
-    relocate 'com.networknt', 'wiremock.com.networknt'
+        relocate 'org.mortbay', 'wiremock.org.mortbay'
+        relocate 'org.eclipse', 'wiremock.org.eclipse'
+        relocate 'org.codehaus', 'wiremock.org.codehaus'
+        relocate 'com.google', 'wiremock.com.google'
+        relocate 'com.google.thirdparty', 'wiremock.com.google.thirdparty'
+        relocate 'com.fasterxml.jackson', 'wiremock.com.fasterxml.jackson'
+        relocate 'org.apache', 'wiremock.org.apache'
+        relocate 'org.xmlunit', 'wiremock.org.xmlunit'
+        relocate 'org.hamcrest', 'wiremock.org.hamcrest'
+        relocate 'org.skyscreamer', 'wiremock.org.skyscreamer'
+        relocate 'org.json', 'wiremock.org.json'
+        relocate 'net.minidev', 'wiremock.net.minidev'
+        relocate 'com.jayway', 'wiremock.com.jayway'
+        relocate 'org.objectweb', 'wiremock.org.objectweb'
+        relocate 'org.custommonkey', 'wiremock.org.custommonkey'
+        relocate 'net.javacrumbs', 'wiremock.net.javacrumbs'
+        relocate 'net.sf', 'wiremock.net.sf'
+        relocate 'com.github.jknack', 'wiremock.com.github.jknack'
+        relocate 'org.antlr', 'wiremock.org.antlr'
+        relocate 'jakarta.servlet', 'wiremock.jakarta.servlet'
+        relocate 'org.checkerframework', 'wiremock.org.checkerframework'
+        relocate 'org.hamcrest', 'wiremock.org.hamcrest'
+        relocate 'org.slf4j', 'wiremock.org.slf4j'
+        relocate 'joptsimple', 'wiremock.joptsimple'
+        relocate 'org.yaml', 'wiremock.org.yaml'
+        relocate 'com.ethlo', 'wiremock.com.ethlo'
+        relocate 'com.networknt', 'wiremock.com.networknt'
 
-    mergeServiceFiles()
+        mergeServiceFiles()
+    }
 }
 
 signing {
@@ -116,9 +128,12 @@ publishing {
         }
     }
 
-    getComponents().withType(AdhocComponentWithVariants).each { c ->
-        c.withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-            skip()
+
+    if (getGivenConfigConventional().useShadowJar) {
+        getComponents().withType(AdhocComponentWithVariants).each { c ->
+            c.withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+                skip()
+            }
         }
     }
 
@@ -160,7 +175,10 @@ publishing {
         standaloneJar(MavenPublication) { publication ->
             artifactId = "${baseArtifact}-standalone"
 
-            project.shadow.component(publication)
+
+            if (getGivenConfigConventional().useShadowJar) {
+                project.shadow.component(publication)
+            }
 
             artifact sourcesJar
                     artifact javadocJar
@@ -220,7 +238,9 @@ repositories {
 }
 
 dependencies {
-    shadow("org.wiremock:wiremock:${versions.wiremock}")
+    if (getGivenConfigConventional().useShadowJar) {
+        shadow("org.wiremock:wiremock:${versions.wiremock}")
+    }
 
     testImplementation("org.wiremock:wiremock:${versions.wiremock}")
     testImplementation(platform("org.junit:junit-bom:${versions.junit}"))
@@ -244,8 +264,13 @@ compileJava {
 compileTestJava {
     options.encoding = 'UTF-8'
 }
-assemble.dependsOn jar, shadowJar
-test.dependsOn shadowJar
+
+assemble.dependsOn jar
+
+if (getGivenConfigConventional().useShadowJar) {
+    assemble.dependsOn shadowJar
+    test.dependsOn shadowJar
+}
 
 test {
     useJUnitPlatform()
