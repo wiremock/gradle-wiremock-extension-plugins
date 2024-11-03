@@ -28,7 +28,7 @@ wrapper {
 
 project.ext {
     versions = [
-        wiremock  : '3.6.0',
+        wiremock  : '3.9.2',
         junit     : '5.10.1',
         assertj   : '3.24.2',
         restAssured: '5.3.2',
