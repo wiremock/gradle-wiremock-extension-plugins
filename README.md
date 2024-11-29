@@ -22,6 +22,7 @@ in your plugin, this plugin needs to be updated accordingly:
 
 | Gradle Convention plugin version | Wiremock version |
 |----------------------------------|------------------|
+| 0.4.0+                           | 3.10.0           |
 | 0.3.0+                           | 3.6.0            |
 | 0.1.0+                           | 3.3.1            |
 
