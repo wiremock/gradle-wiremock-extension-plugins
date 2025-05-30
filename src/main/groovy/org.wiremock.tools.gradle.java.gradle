@@ -1,0 +1,55 @@
+project.plugins.apply 'java-library'
+project.plugins.apply 'idea'
+
+group 'org.wiremock.extensions'
+
+wrapper {
+    gradleVersion = '8.2.1'
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+project.archivesBaseName = "${baseArtifact}"
+configurations {
+    standaloneOnly
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+jar {
+    archiveBaseName.set("${baseArtifact}")
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
+assemble.dependsOn jar
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+idea {
+    project {
+        jdkName = '11'
+        languageLevel = '11'
+    }
+}

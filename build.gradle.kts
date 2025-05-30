@@ -41,6 +41,33 @@ gradlePlugin {
                 description = "Gradle convention plugin for WireMock Extensions"
                 tags = listOf("wiremock")
             }
+
+            removeIf { it.id.equals("org.wiremock.tools.gradle.extension-dependencies") }
+            register("extension-dependencies") {
+                id = "org.wiremock.tools.gradle.extension-dependencies"
+                implementationClass = "OrgWiremockToolsGradleExtensionDependenciesPlugin"
+                displayName = "Common dependencies for WireMock"
+                description = "Gradle convention plugin for WireMock extension dependencies"
+                tags = listOf("wiremock")
+            }
+
+            removeIf { it.id.equals("org.wiremock.tools.gradle.publishing") }
+            register("publishing") {
+                id = "org.wiremock.tools.gradle.publishing"
+                implementationClass = "OrgWiremockToolsGradlePublishingPlugin"
+                displayName = "Common publishing for WireMock"
+                description = "Gradle convention plugin for WireMock publishing"
+                tags = listOf("wiremock")
+            }
+
+            removeIf { it.id.equals("org.wiremock.tools.gradle.java") }
+            register("java") {
+                id = "org.wiremock.tools.gradle.java"
+                implementationClass = "OrgWiremockToolsGradleJavaPlugin"
+                displayName = "Common java conventions for WireMock"
+                description = "Gradle convention plugin for WireMock Java"
+                tags = listOf("wiremock")
+            }
         }
     }
 }
