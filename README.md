@@ -78,6 +78,12 @@ plugins {
 }
 ```
 
+The `wiremock-extension-convention` plugin is really just a bundle of other plugins that can also be applied individually:
+
+- `org.wiremock.tools.gradle.extension-dependencies` - Adds a basic set of dependencies.
+- `org.wiremock.tools.gradle.java` - Basic java settings.
+- `org.wiremock.tools.gradle.publishing` - Things needed for publishing to Central.
+
 ### Shading of dependencies
 
 When you need to include additional dependencies,

@@ -1,0 +1,219 @@
+def getGivenConfigConventional() {
+    def givenConfig = [
+            useShadowJar: project.getProperties().getOrDefault("useShadowJar", "true") == "true"
+    ]
+    return givenConfig
+}
+
+logger.info("WireMock conventions given config: ${getGivenConfigConventional()}")
+
+project.plugins.apply 'signing'
+project.plugins.apply 'maven-publish'
+if (getGivenConfigConventional().useShadowJar) {
+    project.plugins.apply "com.github.johnrengelman.shadow"
+}
+project.plugins.apply 'io.github.gradle-nexus.publish-plugin'
+
+if (getGivenConfigConventional().useShadowJar) {
+    assemble.dependsOn shadowJar
+    test.dependsOn shadowJar
+
+    dependencies {
+        shadow("org.wiremock:wiremock:${versions.wiremock}")
+    }
+
+    shadowJar {
+        archiveBaseName.set("${baseArtifact}-standalone")
+        archiveClassifier.set('')
+        configurations = [
+                project.configurations.runtimeClasspath,
+                project.configurations.standaloneOnly
+        ]
+
+        relocate 'org.mortbay', 'wiremock.org.mortbay'
+        relocate 'org.eclipse', 'wiremock.org.eclipse'
+        relocate 'org.codehaus', 'wiremock.org.codehaus'
+        relocate 'com.google', 'wiremock.com.google'
+        relocate 'com.google.thirdparty', 'wiremock.com.google.thirdparty'
+        relocate 'com.fasterxml.jackson', 'wiremock.com.fasterxml.jackson'
+        relocate 'org.apache', 'wiremock.org.apache'
+        relocate 'org.xmlunit', 'wiremock.org.xmlunit'
+        relocate 'org.hamcrest', 'wiremock.org.hamcrest'
+        relocate 'org.skyscreamer', 'wiremock.org.skyscreamer'
+        relocate 'org.json', 'wiremock.org.json'
+        relocate 'net.minidev', 'wiremock.net.minidev'
+        relocate 'com.jayway', 'wiremock.com.jayway'
+        relocate 'org.objectweb', 'wiremock.org.objectweb'
+        relocate 'org.custommonkey', 'wiremock.org.custommonkey'
+        relocate 'net.javacrumbs', 'wiremock.net.javacrumbs'
+        relocate 'net.sf', 'wiremock.net.sf'
+        relocate 'com.github.jknack', 'wiremock.com.github.jknack'
+        relocate 'org.antlr', 'wiremock.org.antlr'
+        relocate 'jakarta.servlet', 'wiremock.jakarta.servlet'
+        relocate 'org.checkerframework', 'wiremock.org.checkerframework'
+        relocate 'org.hamcrest', 'wiremock.org.hamcrest'
+        relocate 'org.slf4j', 'wiremock.org.slf4j'
+        relocate 'joptsimple', 'wiremock.joptsimple'
+        relocate 'org.yaml', 'wiremock.org.yaml'
+        relocate 'com.ethlo', 'wiremock.com.ethlo'
+        relocate 'com.networknt', 'wiremock.com.networknt'
+
+        mergeServiceFiles()
+    }
+}
+
+signing {
+    // Docs: https://github.com/wiremock/community/blob/main/infra/maven-central.md
+    def isPublishTask = gradle.taskGraph.hasTask("uploadArchives") || gradle.taskGraph.hasTask("publish")
+    logger.info("Checking signing requirements: Version: " + version.toString() + ", Publish: " + isPublishTask)
+
+    required {
+        !version.toString().contains("SNAPSHOT") && isPublishTask
+    }
+    def signingKey = providers.environmentVariable("OSSRH_GPG_SECRET_KEY").orElse("").get()
+    def signingPassphrase = providers.environmentVariable("OSSRH_GPG_SECRET_KEY_PASSWORD").orElse("").get()
+    if (!signingKey.isEmpty() && !signingPassphrase.isEmpty()) {
+        useInMemoryPgpKeys(signingKey, signingPassphrase)
+        sign(publishing.publications)
+    } else {
+        if (required) {
+            logger.error("Will not be signing the artifacts, no signing key or password specified via environment variables")
+            throw new GradleException("Cannot sign artifacts")
+        } else {
+            logger.info("Skipping signing of the artifacts, not required")
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/wiremock/${githubRepo}"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+
+
+    if (getGivenConfigConventional().useShadowJar) {
+        getComponents().withType(AdhocComponentWithVariants).each { c ->
+            c.withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+                skip()
+            }
+        }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = "${baseArtifact}"
+
+            from components.java
+
+            pom {
+                name = "${baseArtifact}"
+                description = "${description}"
+                url = "https://github.com/wiremock/${githubRepo}"
+
+
+                scm {
+                    connection = "https://github.com/wiremock/${githubRepo}.git"
+                    developerConnection = "https://github.com/wiremock/${githubRepo}.git"
+                    url = "https://github.com/wiremock/${githubRepo}.git"
+                }
+
+                licenses {
+                    license {
+                        name = 'The Apache Software License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution = 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = project.findProperty("developer.id") ?: "wiremock-build-bot"
+                        name = project.findProperty("developer.name") ?: "WireMock Build Bot"
+                        email = project.findProperty("developer.email") ?: "build-bot@wiremock.org"
+                    }
+                }
+            }
+        }
+        standaloneJar(MavenPublication) { publication ->
+            artifactId = "${baseArtifact}-standalone"
+
+
+            if (getGivenConfigConventional().useShadowJar) {
+                project.shadow.component(publication)
+            }
+
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom {
+
+                name = "${baseArtifact}-standalone"
+                description = "${description}"
+                url = "https://github.com/wiremock/${githubRepo}"
+
+                scm {
+                    connection = "https://github.com/wiremock/${githubRepo}.git"
+                    developerConnection = "https://github.com/wiremock/${githubRepo}.git"
+                    url = "https://github.com/wiremock/${githubRepo}.git"
+                }
+
+                licenses {
+                    license {
+                        name = 'The Apache Software License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution = 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = project.findProperty("developer.id") ?: "wiremock-build-bot"
+                        name = project.findProperty("developer.name") ?: "WireMock Build Bot"
+                        email = project.findProperty("developer.email") ?: "build-bot@wiremock.org"
+                    }
+                }
+            }
+        }
+    }
+}
+
+task checkReleasePreconditions {
+    doLast {
+        def REQUIRED_GIT_BRANCH = 'HEAD'
+        def currentGitBranch = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
+        assert currentGitBranch == REQUIRED_GIT_BRANCH, "Must be on the $REQUIRED_GIT_BRANCH branch in order to release to Sonatype"
+    }
+}
+publish.dependsOn checkReleasePreconditions
+publish.dependsOn 'signStandaloneJarPublication'
+publish.dependsOn 'signMavenJavaPublication'
+
+// FIXME: remove after https://github.com/gradle/gradle/issues/26091
+tasks.withType(AbstractPublishToMaven).configureEach {
+    def signingTasks = tasks.withType(Sign)
+    mustRunAfter(signingTasks)
+}
+
+nexusPublishing {
+    // See https://github.com/wiremock/community/blob/main/infra/maven-central.md
+    repositories {
+        sonatype {
+            // TODO: allow configuring destinations for oss1
+            // nexusUrl.set(uri("https://oss.sonatype.org/service/local/"))
+            // snapshotRepositoryUrl.set(uri("https://oss.sonatype.org/content/repositories/snapshots/"))
+            def envUsername = providers.environmentVariable("OSSRH_USERNAME").orElse("").get()
+            def envPassword = providers.environmentVariable("OSSRH_TOKEN").orElse("").get()
+            if (!envUsername.isEmpty() && !envPassword.isEmpty()) {
+                username.set(envUsername)
+                password.set(envPassword)
+            }
+        }
+    }
+}
