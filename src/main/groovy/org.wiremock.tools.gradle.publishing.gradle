@@ -208,6 +208,7 @@ nexusPublishing {
             // TODO: allow configuring destinations for oss1
             // nexusUrl.set(uri("https://oss.sonatype.org/service/local/"))
             // snapshotRepositoryUrl.set(uri("https://oss.sonatype.org/content/repositories/snapshots/"))
+            nexusUrl = uri("https://ossrh-staging-api.central.sonatype.com/service/local/")
             def envUsername = providers.environmentVariable("OSSRH_USERNAME").orElse("").get()
             def envPassword = providers.environmentVariable("OSSRH_TOKEN").orElse("").get()
             if (!envUsername.isEmpty() && !envPassword.isEmpty()) {
