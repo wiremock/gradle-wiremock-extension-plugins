@@ -3,11 +3,6 @@ project.plugins.apply 'idea'
 
 group 'org.wiremock.extensions'
 
-wrapper {
-    gradleVersion = '8.2.1'
-    distributionType = Wrapper.DistributionType.BIN
-}
-
 project.archivesBaseName = "${baseArtifact}"
 configurations {
     standaloneOnly

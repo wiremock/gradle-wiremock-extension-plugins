@@ -2,40 +2,38 @@ name: Build and test
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  validate:
-    name: Validate Gradle wrapper
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
   build:
     strategy:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        jdk: [ 11]
+        jdk: [ 17 ]
     runs-on: ${{ matrix.os }}
     env:
       JDK_VERSION: ${{ matrix.jdk }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - name: Set up JDK
-        uses: actions/setup-java@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.jdk }}
           distribution: 'temurin'
-      - name: Grant execute permission for gradlew
+
+      - name: Make Gradle wrapper executable
         run: chmod +x gradlew
-      - name: Run the Gradle package task
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: build check
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        
+      - name: Run build
+        run: ./gradlew build check
