@@ -8,11 +8,11 @@ plugins {
 
     `java-library`
     `maven-publish`
-    id("com.gradle.plugin-publish") version "1.3.0"
-    id("com.palantir.git-version") version "3.1.0" apply false
+    id("com.gradle.plugin-publish") version "1.3.1"
+    id("com.palantir.git-version") version "4.0.0" apply false
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
     id("io.github.gradle-nexus.publish-plugin") version "2.0.0" apply false
-    id("com.github.ben-manes.versions") version "0.51.0"
+    id("com.github.ben-manes.versions") version "0.52.0"
 }
 
 group = "org.wiremock.tools.gradle"
@@ -75,7 +75,7 @@ gradlePlugin {
 dependencies {
 
     implementation(kotlin("stdlib-jdk8"))
-    implementation("com.palantir.gradle.gitversion:gradle-git-version:3.1.0")
+    implementation("com.palantir.gradle.gitversion:gradle-git-version:4.0.0")
     implementation("com.github.johnrengelman:shadow:8.1.1")
     implementation("io.github.gradle-nexus:publish-plugin:2.0.0")
 
