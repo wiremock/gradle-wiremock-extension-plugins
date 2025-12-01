@@ -13,7 +13,7 @@ Features:
 ## Requirements
 
 - Gradle 8.x
-- Java 11 or 17
+- Java 17
 
 ## WireMock dependency
 
@@ -22,6 +22,7 @@ in your plugin, this plugin needs to be updated accordingly:
 
 | Gradle Convention plugin version | Wiremock version |
 |----------------------------------|------------------|
+| 0.6.0+                           | 4.0.0            |
 | 0.4.0+                           | 3.10.0           |
 | 0.3.0+                           | 3.6.0            |
 | 0.1.0+                           | 3.3.1            |
@@ -125,7 +126,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
+          java-version: '17'
           distribution: 'adopt'
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
@@ -140,11 +141,11 @@ jobs:
         id: publish_package
         uses: gradle/gradle-build-action@v2.9.0
         with:
-          arguments: -Pversion=${{ steps.new_version.outputs.new_version }} publish closeAndReleaseStagingRepository
+          arguments: -Pversion=${{ steps.new_version.outputs.new_version }} publishAndReleaseToMavenCentral --no-configuration-cache
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ vars.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
           OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           OSSRH_GPG_SECRET_KEY_PASSWORD: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
 ```

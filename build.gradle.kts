@@ -11,7 +11,7 @@ plugins {
     id("com.gradle.plugin-publish") version "1.3.1"
     id("com.palantir.git-version") version "4.0.0" apply false
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
-    id("io.github.gradle-nexus.publish-plugin") version "2.0.0" apply false
+    id("com.vanniktech.maven.publish.base") version "0.35.0" apply false
     id("com.github.ben-manes.versions") version "0.52.0"
 }
 
@@ -19,7 +19,7 @@ group = "org.wiremock.tools.gradle"
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
@@ -77,7 +77,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("com.palantir.gradle.gitversion:gradle-git-version:4.0.0")
     implementation("com.github.johnrengelman:shadow:8.1.1")
-    implementation("io.github.gradle-nexus:publish-plugin:2.0.0")
+    implementation("com.vanniktech.maven.publish.base:com.vanniktech.maven.publish.base.gradle.plugin:0.35.0")
 
     runtimeOnly(kotlin("gradle-plugin"))
 
@@ -101,7 +101,7 @@ tasks {
 
 // default versions ---------------------------------------------------
 
-val wiremockVersion = "3.10.0"
+val wiremockVersion = "4.0.0-beta.19"
 
 val basePackagePath = "org/wiremock/tools/gradle/plugins"
 val processResources by tasks.existing(ProcessResources::class)
