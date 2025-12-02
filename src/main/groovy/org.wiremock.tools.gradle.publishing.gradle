@@ -1,3 +1,9 @@
+project.ext {
+    versions = [
+            wiremock: '4.0.0-beta.19',
+    ]
+}
+
 def getGivenConfigConventional() {
     def givenConfig = [
             useShadowJar: project.getProperties().getOrDefault("useShadowJar", "true") == "true"
